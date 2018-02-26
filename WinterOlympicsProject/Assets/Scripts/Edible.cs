@@ -24,14 +24,25 @@ public class Edible : MonoBehaviour
 
 	void OnCollisionEnter(Collision coll)
 	{
-		if (coll.gameObject.GetComponentInParent<Chopstick>() != null)
+		if (coll.gameObject.GetComponentInParent<Chopstick>() != null && coll.gameObject.GetComponent<Edible>() == null)
 		{
-			Debug.Log("Collided with a chopstick!");
-			this.transform.SetParent(coll.gameObject.transform);
+			if (!coll.gameObject.GetComponentInParent<Chopstick>().hasPickedUpEdible)
+			{
+				GetComponent<Rigidbody>().isKinematic = true;
+				Debug.Log("Collided with a chopstick!");
+				this.transform.SetParent(coll.gameObject.transform);
+				coll.gameObject.GetComponentInParent<Chopstick>().hasPickedUpEdible = true;				
+			}
+
 //			Debug.Log("Collided with a chopstick!");
 //			this.gameObject.AddComponent<FixedJoint>();
 //			Debug.Log(GetComponent<FixedJoint>().breakForce);
 //			GetComponent<FixedJoint>().connectedBody = coll.gameObject.GetComponent<Rigidbody>();
 		}
 	}
+
+	void OnTriggerStay(Collider trigger)
+	{
+	}
+	
 }
