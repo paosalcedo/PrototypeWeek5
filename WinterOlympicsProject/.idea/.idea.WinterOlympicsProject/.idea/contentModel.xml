@@ -230,6 +230,7 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
+          <e p="AudioManager.cs" t="Include" />
           <e p="CameraFollow.cs" t="Include" />
           <e p="Chopstick.cs" t="Include" />
           <e p="Edible.cs" t="Include" />
@@ -237,6 +238,7 @@
           <e p="KBBQPlayerInputs.cs" t="Include" />
           <e p="MeatState.cs" t="Include" />
           <e p="RotationRandomizer.cs" t="Include" />
+          <e p="Spawner.cs" t="Include" />
           <e p="Utils.cs" t="Include" />
         </e>
       </e>

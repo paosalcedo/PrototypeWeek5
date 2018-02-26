@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
 using UnityEditor.Rendering;
+using UnityEngine.SceneManagement;
 
 public class KBBQPlayer : MonoBehaviour
 {
@@ -44,8 +45,12 @@ public class KBBQPlayer : MonoBehaviour
 	private float myRotation = 180;
 	private float c2_myRotation = 180;
 	void ProcessInput()
-	{		
-		
+	{
+		if (Input.GetKeyDown(KeyCode.R))
+		{
+			SceneManager.LoadScene("main");
+		}
+
 		transform.Translate(moveVector * 2.5f * Time.deltaTime);
 		
 		myRotation -= chopstick1.moveVector.x;

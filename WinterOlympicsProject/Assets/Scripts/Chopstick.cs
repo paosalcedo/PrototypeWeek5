@@ -32,7 +32,7 @@ public class Chopstick : MonoBehaviour
 //		{
 			for (var i = 0; i < myChopstickGO.transform.childCount; ++i)
 			{
-				myChopstickGO.transform.GetChild(i).gameObject.AddComponent<Rigidbody>();
+//				myChopstickGO.transform.GetChild(i).gameObject.AddComponent<Rigidbody>();
 				Rigidbody edibleRb = myChopstickGO.transform.GetChild(i).gameObject.GetComponent<Rigidbody>();
 				edibleRb.useGravity = true;
 				myChopstickGO.transform.GetChild(i).SetParent(null);

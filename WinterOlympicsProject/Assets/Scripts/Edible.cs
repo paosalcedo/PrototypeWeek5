@@ -5,9 +5,14 @@ using UnityEngine;
 
 public class Edible : MonoBehaviour
 {
-	public Transform myTransform;
+	[SerializeField] private GameObject[] plates;
+	[SerializeField] private AudioClip[] clips;
 
-	public MeatState meatState;
+	public AudioSource myAudioSource;
+	// Use this for initialization
+	public Transform myTransform;
+	private AudioManager audioManager;
+ 	public MeatState meatState;
 
 	[SerializeField] private MeshRenderer[] meatRenderers;
 
@@ -24,6 +29,10 @@ public class Edible : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+		audioManager = FindObjectOfType<AudioManager>();
+		myAudioSource = GetComponent<AudioSource>();
+// 		myAudioSource.time = Random.Range(0.00001f, 22.84301f);
+		myAudioSource.PlayScheduled(AudioSettings.dspTime + 0.0000001f);
 		isDipped = false;
 		meatState = MeatState.Raw;
 		Utils.RandomizeRotation(Vector3.right, Random.Range(0, 360), this.transform);	
@@ -68,6 +77,11 @@ public class Edible : MonoBehaviour
 			meatRenderers[2].enabled = true;
 		}
 
+		if (transform.position.y <= -20f)
+		{
+			Destroy(gameObject);
+		}
+
 	}
 
 	void OnCollisionEnter(Collision coll)
@@ -91,15 +105,67 @@ public class Edible : MonoBehaviour
 
 	
 	void OnTriggerStay(Collider trigger)
-	{
+	{	
+		//cooking on grill
 		if (trigger.gameObject.layer == 10)
 		{
-			timeOnGrill += Time.deltaTime;		
+			timeOnGrill += Time.deltaTime;
+			myAudioSource.volume = 0.5f;
 		} else if (trigger.gameObject.layer == 11)
 		{
 			isDipped = true;
 		}
-
 	}
-	
+
+	private void OnTriggerExit(Collider trigger)
+	{
+		if (trigger.gameObject.layer == 10)
+		{
+			myAudioSource.volume = 0;
+		}
+	}
+
+	private void OnTriggerEnter(Collider trigger)
+	{
+		if (trigger.gameObject.layer == 12) //goal
+		{
+			switch (meatState)
+			{
+				case MeatState.Raw:
+					Destroy(gameObject);
+					Destroy(trigger.gameObject.transform.parent.gameObject);
+					break;
+				case MeatState.Cooked:
+					Destroy(gameObject);
+					Destroy(trigger.gameObject.transform.parent.gameObject);
+					break;
+				case MeatState.Burned:
+					Destroy(gameObject);
+					Destroy(trigger.gameObject.transform.parent.gameObject);
+					break;
+				default:
+					break;
+			}
+
+		}
+	}
+
+	void OnDestroy()
+	{ 
+		switch (meatState)
+		{
+			case MeatState.Raw:	
+				audioManager.PlayDisgustedSound();
+				break;
+			case MeatState.Cooked:
+				if(isDipped)
+					audioManager.PlayDelishSound();			
+				break;
+			case MeatState.Burned:
+				audioManager.PlayDisgustedSound();
+				break;
+			default:
+				break;
+		}
+	}
 }
