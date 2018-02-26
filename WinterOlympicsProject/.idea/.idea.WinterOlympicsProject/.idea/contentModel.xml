@@ -235,6 +235,7 @@
           <e p="Edible.cs" t="Include" />
           <e p="KBBQPlayer.cs" t="Include" />
           <e p="KBBQPlayerInputs.cs" t="Include" />
+          <e p="MeatState.cs" t="Include" />
           <e p="RotationRandomizer.cs" t="Include" />
           <e p="Utils.cs" t="Include" />
         </e>

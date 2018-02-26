@@ -40,7 +40,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1404158604399186}
   m_LocalRotation: {x: 0.5013502, y: 0.5013502, z: 0.49864614, w: 0.49864614}
-  m_LocalPosition: {x: 15.934702, y: -0.484, z: -5.5897017}
+  m_LocalPosition: {x: 16.39, y: -0.484, z: -8.716}
   m_LocalScale: {x: 0.18636897, y: 0.18636897, z: 0.18637}
   m_Children: []
   m_Father: {fileID: 0}
@@ -19865,6 +19865,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myTransform: {fileID: 0}
+  meatState: 0
+  timeOnGrill: 0
 --- !u!114 &114700330734198666
 MonoBehaviour:
   m_ObjectHideFlags: 1
