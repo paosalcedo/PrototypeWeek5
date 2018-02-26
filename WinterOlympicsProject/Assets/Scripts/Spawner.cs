@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Spawner : MonoBehaviour {
 
  	public float multiplier = 0;
 	public float timer;
 	public float timerMax;
+	
 
 	public enum ObjectToSpawn
 	{
@@ -26,7 +28,7 @@ public class Spawner : MonoBehaviour {
 		switch (objectToSpawn)
 		{
 			case ObjectToSpawn.Meat:
-				if (Input.GetKey(KeyCode.Space))
+				if (KBBQPlayer.instance.player.GetButtonDown("Spawn Meat"))
 				{
 					SpawnGameobject("meatcomplete", transform.position);					
 				}
@@ -38,11 +40,7 @@ public class Spawner : MonoBehaviour {
 //				}
 				break;
 			case ObjectToSpawn.Lettuce:
-				timer -= Time.deltaTime;
-				if(timer <= 0){
-					SpawnGameobject("lettuce", transform.position);
-					timer = Random.Range(1,3);
-				}
+//				SpawnGameobject("lettuce", transform.position);
 				break;	
 			default:
 				break;
@@ -52,9 +50,17 @@ public class Spawner : MonoBehaviour {
 
 	}
 
-	public virtual void SpawnGameobject(string objToLoad, Vector3 pos){
+	public void SpawnGameobject(string objToLoad, Vector3 pos){
 		GameObject spawned = Instantiate(Resources.Load("Prefabs/" + objToLoad), pos, Quaternion.identity) as GameObject;
 		// cloud.transform.localScale = new Vector3(Random.Range (3,10), Random.Range(3,10), Random.Range(3,10));
 		// cloud.transform.eulerAngles = new Vector3(0, Random.Range(0,359), 0);
  	}
+
+	public IEnumerator DelayedSpawn(string objToLoad, float spawnDelay)
+	{
+		yield return new WaitForSeconds(spawnDelay);
+		Debug.Log("Spawning new lettuce");
+		GameObject spawned = Instantiate(Resources.Load("Prefabs/" + objToLoad), transform.position, Quaternion.identity) as GameObject;
+
+	}
 }

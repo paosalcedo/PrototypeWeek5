@@ -1,7 +1,9 @@
 ﻿using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Mime;
 using UnityEngine;
+using UnityEngine.Advertisements;
 
 public class Edible : MonoBehaviour
 {
@@ -13,6 +15,8 @@ public class Edible : MonoBehaviour
 	public Transform myTransform;
 	private AudioManager audioManager;
  	public MeatState meatState;
+
+	private bool isOffTable;
 
 	[SerializeField] private MeshRenderer[] meatRenderers;
 
@@ -29,9 +33,11 @@ public class Edible : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+		isOffTable = false;
 		audioManager = FindObjectOfType<AudioManager>();
 		myAudioSource = GetComponent<AudioSource>();
-// 		myAudioSource.time = Random.Range(0.00001f, 22.84301f);
+		myAudioSource.volume = 0;
+ 		myAudioSource.time = Random.Range(0.00001f, 22.84301f);
 		myAudioSource.PlayScheduled(AudioSettings.dspTime + 0.0000001f);
 		isDipped = false;
 		meatState = MeatState.Raw;
@@ -75,6 +81,11 @@ public class Edible : MonoBehaviour
 			meatRenderers[0].enabled = false;
 			meatRenderers[1].enabled = false;
 			meatRenderers[2].enabled = true;
+		}
+
+		if (transform.position.y <= -15f)
+		{
+			isOffTable = true;
 		}
 
 		if (transform.position.y <= -20f)
@@ -125,8 +136,26 @@ public class Edible : MonoBehaviour
 		}
 	}
 
+	private bool hasTriggeredLettuceSpawn = false;
+	
 	private void OnTriggerEnter(Collider trigger)
 	{
+		if (trigger.gameObject.layer == 14)
+		{
+			Debug.Log("fell into spawn trigger!");
+			if (trigger.gameObject.GetComponentInParent<Spawner>() != null)
+			{
+				Debug.Log("trigger is a spawner!");
+				Spawner lettuceSpawner = trigger.gameObject.GetComponentInParent<Spawner>();
+				if (!hasTriggeredLettuceSpawn)
+				{
+					Debug.Log("calling spawn lettuce coroutine!");
+					lettuceSpawner.StartCoroutine(lettuceSpawner.DelayedSpawn("lettuce", 5f));
+					hasTriggeredLettuceSpawn = true;
+				}				
+			}
+		}
+		
 		if (trigger.gameObject.layer == 12) //goal
 		{
 			switch (meatState)
@@ -146,26 +175,39 @@ public class Edible : MonoBehaviour
 				default:
 					break;
 			}
-
 		}
 	}
 
+
 	void OnDestroy()
-	{ 
-		switch (meatState)
+	{
+		if (!isOffTable)
 		{
-			case MeatState.Raw:	
-				audioManager.PlayDisgustedSound();
-				break;
-			case MeatState.Cooked:
-				if(isDipped)
-					audioManager.PlayDelishSound();			
-				break;
-			case MeatState.Burned:
-				audioManager.PlayDisgustedSound();
-				break;
-			default:
-				break;
+ 			switch (meatState)
+			{
+				case MeatState.Raw:	
+					TextManager.instance.ShowRawText();
+					audioManager.PlayDisgustedSound();
+					break;
+				case MeatState.Cooked:
+					if (isDipped)
+					{
+						TextManager.instance.ShowCookedWithSauceText();
+						audioManager.PlayDelishSound();							
+					}
+					else
+					{
+						TextManager.instance.ShowCookedNoSauceText();
+						audioManager.PlayDisgustedSound();
+					}
+					break;
+				case MeatState.Burned:
+					TextManager.instance.ShowBurnedText();
+					audioManager.PlayDisgustedSound();
+					break;
+				default:
+					break;
+			}
 		}
 	}
 }

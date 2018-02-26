@@ -239,6 +239,7 @@
           <e p="MeatState.cs" t="Include" />
           <e p="RotationRandomizer.cs" t="Include" />
           <e p="Spawner.cs" t="Include" />
+          <e p="TextManager.cs" t="Include" />
           <e p="Utils.cs" t="Include" />
         </e>
       </e>
